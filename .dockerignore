@@ -1,3 +1,5 @@
+.git
+.gitignore
 .bundle
 .env
 .env.*
@@ -15,3 +17,7 @@ vendor/bundle
 .DS_Store
 *.swp
 *~
+.github
+.circleci
+spec
+test

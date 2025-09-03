@@ -6,16 +6,12 @@ set -e
 rm -rf /app/tmp/pids/server.pid
 rm -rf /app/tmp/cache/*
 
-echo "Waiting for postgres to become ready...."
-./docker/entrypoints/helpers/pg_database_url.rb
+echo "Waiting for database to become ready...."
 
-export POSTGRES_HOST="${POSTGRES_HOST:-$POSTGRES_PORT_5432_TCP_ADDR}"
-export POSTGRES_PORT="${POSTGRES_PORT:-$POSTGRES_PORT_5432_TCP_PORT}"
-
-PG_READY="pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USERNAME"
-
-until $PG_READY
+# Use DATABASE_URL directly with pg_isready
+until pg_isready -d "$DATABASE_URL"
 do
+  echo "Waiting for database connection..."
   sleep 2
 done
 
