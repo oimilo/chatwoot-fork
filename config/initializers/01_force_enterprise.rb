@@ -1,13 +1,26 @@
-# Force Enterprise Edition - More aggressive approach
-Rails.application.config.after_initialize do
-  # Force ChatwootApp to always return enterprise
-  ChatwootApp.singleton_class.send(:define_method, :enterprise?) { true }
-  
-  # Force ChatwootHub pricing_plan
-  ChatwootHub.singleton_class.send(:define_method, :pricing_plan) { 'enterprise' }
-  ChatwootHub.singleton_class.send(:define_method, :pricing_plan_quantity) { 999999 }
-  
-  # Log to confirm
-  Rails.logger.info "🚀 ENTERPRISE FORCED: ChatwootApp.enterprise? = true"
-  Rails.logger.info "🚀 PRICING PLAN FORCED: ChatwootHub.pricing_plan = enterprise"
+# Force Enterprise Edition - Override methods directly
+# Override ChatwootApp
+module ChatwootApp
+  class << self
+    def enterprise?
+      true
+    end
+  end
 end
+
+# Override ChatwootHub
+module ChatwootHub  
+  class << self
+    def pricing_plan
+      'enterprise'
+    end
+    
+    def pricing_plan_quantity
+      999999
+    end
+  end
+end
+
+Rails.logger.info "🚀 ENTERPRISE FORCED AT BOOT"
+Rails.logger.info "🚀 ChatwootApp.enterprise? = #{ChatwootApp.enterprise?}"
+Rails.logger.info "🚀 ChatwootHub.pricing_plan = enterprise"
