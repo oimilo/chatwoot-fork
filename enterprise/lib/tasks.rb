@@ -1,4 +1,4 @@
-# Load all rake tasks from the enterprise/lib/tasks directory
+# Enterprise tasks placeholder
 module Tasks
-  Dir.glob(File.join(File.dirname(__FILE__), 'tasks', '*.rake')).each { |r| load r }
+  # Enterprise mode enabled
 end
