@@ -3,6 +3,10 @@ FROM chatwoot/chatwoot:latest
 # Copy enterprise folder to enable enterprise mode
 COPY enterprise /app/enterprise
 
+# Copy custom entrypoint
+COPY docker/custom-entrypoint.sh /app/docker/custom-entrypoint.sh
+RUN chmod +x /app/docker/custom-entrypoint.sh
+
 # Set environment variables for the hack
 ENV CW_EDITION=ee \
     DISABLE_TELEMETRY=true \
@@ -21,6 +25,6 @@ WORKDIR /app
 # Railway uses the PORT environment variable
 EXPOSE 3000
 
-# Use the official Chatwoot entrypoint
-ENTRYPOINT ["docker/entrypoints/rails.sh"]
+# Use custom entrypoint that runs migrations
+ENTRYPOINT ["/app/docker/custom-entrypoint.sh"]
 CMD ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
