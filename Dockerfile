@@ -1,20 +1,26 @@
 FROM chatwoot/chatwoot:latest
 
-# Copy enterprise folder structure to enable enterprise mode
-COPY enterprise /app/enterprise
+# Install dependencies for Railway
+RUN apk add --no-cache multirun postgresql-client
 
-# Set environment variables for enterprise mode as per HACK_COMPLETO.md
+# Copy enterprise folder and configurations
+COPY enterprise /app/enterprise
+COPY config/initializers/01_force_enterprise.rb /app/config/initializers/01_force_enterprise.rb
+
+# Set Enterprise environment variables
 ENV CW_EDITION=ee \
+    INSTALLATION_PRICING_PLAN=enterprise \
+    INSTALLATION_PRICING_PLAN_QUANTITY=999999 \
     DISABLE_TELEMETRY=true \
     CHATWOOT_HUB_URL=http://localhost:9999 \
     RAILS_ENV=production \
-    NODE_ENV=production
+    NODE_ENV=production \
+    INSTALLATION_ENV=docker
+
+# Copy startup script
+COPY --chmod=755 start.sh ./
 
 WORKDIR /app
 
-# Railway uses the PORT environment variable
-EXPOSE 3000
-
-# Simple startup command - let the initializer handle enterprise forcing
-CMD bundle exec rails db:chatwoot_prepare && \
-    bundle exec rails s -b 0.0.0.0 -p ${PORT:-3000}
+ENTRYPOINT ["/bin/sh"]
+CMD ["start.sh"]
