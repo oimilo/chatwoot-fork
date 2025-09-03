@@ -1,3 +1,4 @@
-# Enterprise tasks placeholder
-# This file is intentionally empty to prevent loading errors
-# The enterprise edition features are simulated through environment variables
+module Tasks
+  # Enterprise tasks module placeholder
+  # This module is required for Zeitwerk autoloading
+end
