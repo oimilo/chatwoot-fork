@@ -1,4 +1,3 @@
 # Enterprise tasks placeholder
-module Tasks
-  # Enterprise mode enabled
-end
+# This file is intentionally empty to prevent loading errors
+# The enterprise edition features are simulated through environment variables
